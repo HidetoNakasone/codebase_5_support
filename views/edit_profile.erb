@@ -1,0 +1,21 @@
+
+<h1>プロフィール編集 ページ</h1>
+
+<form action="/edit_profile" method="post" enctype="multipart/form-data">
+
+  <label>
+    プロフィール文：
+    <input type="text" name="new_profile" value="<%= my_info['profile'] %>">
+  </label><br>
+
+  <label>
+    プロフィール画像：<br>
+    <img id="ep_profile_img" src="/user_icon_images/<%= my_info['icon_img_path'] %>" alt="<%= my_info['name'] %>さんのプロフィール画像">
+    <input type="file" name="new_icon_img">
+  </label><br>
+
+  <input type="submit" value="更新">
+
+</form>
+
+<a href="/">TOPへ戻る</a>

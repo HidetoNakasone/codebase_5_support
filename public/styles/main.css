@@ -1,0 +1,25 @@
+
+#about_me {
+  background-color: rgb(205, 195, 11);
+  border-radius: 20px;
+  padding: 2px 15px;
+}
+
+#top_profile_img {
+  width: 100px;
+}
+
+.view {
+  background-color: rgb(100, 192, 233);
+  border-radius: 20px;
+  padding: 2px 15px;
+}
+
+.view_img {
+  width: 100px;
+}
+
+#ep_profile_img {
+  width: 100px;
+  cursor: pointer;
+}

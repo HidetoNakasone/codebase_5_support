@@ -1,0 +1,20 @@
+
+<h1>ログイン ページ</h1>
+
+<form action="/login" method="post">
+
+  <label>
+    ログインName：
+    <input type="text" name="l_name" value="<%= cookies[:l_name] if cookies[:l_name] %>" required>
+  </label><br>
+
+  <label>
+    ログインPass：
+    <input type="password" name="l_pass" required>
+  </label><br>
+
+  <input type="submit" value="ログイン">
+
+</form>
+
+<a href="/signup">新規登録へ</a>

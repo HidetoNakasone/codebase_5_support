@@ -1,0 +1,13 @@
+
+
+<div id="follow_list_view">
+  <% if @res.size < 1 %>
+    <p><%= my_info['name'] %>さんをフォローしている人はいません</p>
+  <% end %>
+
+  <% @res.each do |item| %>
+    <p><%= item %></p>
+  <% end %>
+</div>
+
+<a href="/">TOPへ戻る</a>

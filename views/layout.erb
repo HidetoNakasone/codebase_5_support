@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/styles/main.css">
+    <title><%= @title %></title>
+  </head>
+  <body>
+
+    <p><%= cookies[:msg] if cookies[:msg] %></p>
+    <% cookies[:msg] = nil %>
+
+    <%= yield %>
+
+
+  </body>
+</html>

@@ -1,0 +1,30 @@
+
+<h1>新規登録 ページ</h1>
+
+<form action="/signup" method="post">
+
+  <label>
+    新規ユーザーName：
+    <input type="text" name="s_name" value="<%= cookies[:s_name] if cookies[:s_name] %>" required>
+  </label><br>
+
+  <label>
+    新規Pass：
+    <input type="password" name="s_pass" required>
+  </label><br>
+
+  <label>
+    新規Pass(確認)：
+    <input type="password" name="s_pass_re" required>
+  </label><br>
+
+  <label>
+    プロフィール文：
+    <input type="text" name="s_profile" placeholder="省略可">
+  </label><br>
+
+  <input type="submit" value="登録">
+
+</form>
+
+<a href="/login">ログインへ</a>
