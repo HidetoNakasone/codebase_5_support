@@ -1,5 +1,10 @@
 .DS_Store
 memo.sql
 memo.txt
-public/up_images/
-public/user_icon_images/
+public/up_images/*.jpg
+public/up_images/*.jpeg
+public/up_images/*.png
+public/user_icon_images/*.jpg
+public/user_icon_images/*.jpeg
+public/user_icon_images/*.png
+!public/user_icon_images/default_user_icon.jpg
