@@ -40,7 +40,7 @@
     <p><span class="view_creater_name">投稿者： <%= item['name'] %></span>&emsp;<span class="view_msg">メッセージ： <%= item['msg'] %></span></p>
     <img class="view_img" src="/up_images/<%= item['img_path'] %>" alt="<%= item['name'] %>さんの投稿画像です">
 
-    <% if item['creater_id'] != my_info['my_id'] %>
+    <% if item['creater_id'] != my_info['id'] %>
 
       <% if item['follow_from_user_id'] %>
         <a href="/unfollow/<%= item['creater_id'] %>">フォロー解除</a>
