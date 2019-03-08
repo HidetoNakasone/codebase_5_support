@@ -1,7 +1,7 @@
 
-<h1>トップ ページ</h1>
+<h1 id="title">トップ ページ</h1>
 
-<div id="about_me">
+<div id="top_about_me">
   <p>自分に関する情報： id(<%= my_info['id'] %>), name(<%= my_info['name']%>), プロフィール文(<%= my_info['profile'] %>)</p>
 
   <img id="top_profile_img" src="/user_icon_images/<%= my_info['icon_img_path'] %>" alt="<%= my_info['name'] %>さんのプロフィール画像">
@@ -10,7 +10,7 @@
 <br>
 
 <!-- 投稿フォーム -->
-<form action="/save" method="post" enctype="multipart/form-data">
+<form id="top_form" action="/save" method="post" enctype="multipart/form-data">
   <label>
     投稿画像：
     <input type="file" name="up_img" accept="image/jpeg, image/x-png, image/gif, image/x-MS-bmp" required>
@@ -19,7 +19,7 @@
     メッセージ：
     <input type="text" name="up_msg" placeholder="省略可">
   </label><br>
-  <input type="submit" value="投稿">
+  <input type="submit" value="Send">
 </form>
 
 <br>
@@ -34,27 +34,37 @@
 <br>
 
 <!-- 表示 -->
-<div id="views">
+<div id="top_sviews">
 <% @res.each do |item| %>
-  <div class="view">
-    <p><span class="view_creater_name">投稿者： <%= item['name'] %></span>&emsp;<span class="view_msg">メッセージ： <%= item['msg'] %></span></p>
-    <img class="view_img" src="/up_images/<%= item['img_path'] %>" alt="<%= item['name'] %>さんの投稿画像です">
+  <div class="top_view">
 
-    <% if item['creater_id'] != my_info['id'] %>
+    <p>
+      <span class="top_view_creater_name">投稿者： <%= item['name'] %></span>
+    </p>
 
-      <% if item['follow_from_user_id'] %>
-        <a href="/unfollow/<%= item['creater_id'] %>">フォロー解除</a>
+    <img class="top_view_img" src="/up_images/<%= item['img_path'] %>" alt="<%= item['name'] %>さんの投稿画像です">
+
+    <span class="top_view_msg"><%= item['msg'] %></span><br>
+
+    <div class="top_view_status">
+      <% if item['creater_id'] != my_info['id'] %>
+
+        <% if item['follow_from_user_id'] %>
+          <a href="/unfollow/<%= item['creater_id'] %>">フォロー解除</a>
+        <% else %>
+          <a href="/follow/<%= item['creater_id'] %>">フォローする</a>
+        <% end %>
+
+        <% if item['like_from_user_id'] %>
+          <a href="/unlike/<%= item['id'] %>">いいね解除</a>
+        <% else %>
+          <a href="/like/<%= item['id'] %>">いいねする</a>
+        <% end %>
+
       <% else %>
-        <a href="/follow/<%= item['creater_id'] %>">フォローする</a>
+        <p>( 自分の投稿 )</p>
       <% end %>
-
-      <% if item['like_from_user_id'] %>
-        <a href="/unlike/<%= item['id'] %>">いいね解除</a>
-      <% else %>
-        <a href="/like/<%= item['id'] %>">いいねする</a>
-      <% end %>
-
-    <% end %>
+    </div>
 
 
   </div>

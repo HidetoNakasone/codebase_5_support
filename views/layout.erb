@@ -2,16 +2,27 @@
 <html lang="ja" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
     <link rel="stylesheet" href="/styles/main.css">
     <title><%= @title %></title>
   </head>
   <body>
 
-    <p><%= cookies[:msg] if cookies[:msg] %></p>
-    <% cookies[:msg] = nil %>
+    <div id="page_message">
+      <%= cookies[:page_msg] if cookies[:page_msg] %>
+    </div>
+    <% cookies[:page_msg] = nil %>
 
     <%= yield %>
 
+
+    <div id="logo">
+      <p>&copy; 2019 HEP!</p>
+      <a href="https://github.com/HidetoNakasone/codebase_5_support">View Source</a>
+      <br>
+      <br>
+      <img src="/imgs/logo.png" alt="logo-image">
+    </div>
 
   </body>
 </html>

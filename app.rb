@@ -45,7 +45,7 @@ post '/save' do
 
   db.xquery('insert into posts(creater_id, img_path, msg) values(?, ?, ?);', session[:login_user_id], temp_filename, up_msg)
 
-  cookies[:msg] = '成功： 投稿が正常に保存されました'
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>投稿保存<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -58,7 +58,7 @@ end
 post '/login' do
   res = db.xquery('select * from users where name = ? && pass = ?', params[:l_name], params[:l_pass]).first
   if res
-    cookies[:msg] = '成功： ログインしました'
+    cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
     session[:login_user_id] = res['id']
     cookies[:l_name] = nil
   else
@@ -67,9 +67,9 @@ post '/login' do
     cookies[:l_name] = params['l_name']
 
     unless db.xquery('select id from users where name = ?', params[:l_name]).first
-      cookies[:msg] = '失敗： そのNameのユーザーは存在しません'
+      cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのNameは存在しません」</p>"
     else
-      cookies[:msg] = '失敗： パスワードが間違っています'
+      cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが間違っています」</p>"
     end
 
   end
@@ -86,7 +86,7 @@ post '/signup' do
   cookies[:s_name] = params['s_name']
 
   unless params[:s_pass] == params[:s_pass_re]
-    cookies[:msg] = '失敗： パスワードが一致しません'
+    cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが一致しません」</p>"
     redirect '/signup'
   end
 
@@ -102,13 +102,13 @@ post '/signup' do
 
     res2 = db.xquery('select * from users where name = ? && pass = ?', params[:s_name], params[:s_pass]).first
 
-    cookies[:msg] = '成功： ログインしました'
+    cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
     session[:login_user_id] = res2['id']
     cookies[:s_name] = nil
 
     redirect '/'
   else
-    cookies[:msg] = '失敗： そのnameは使用されています'
+    cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのユーザー名は存在しています」</p>"
     redirect '/signup'
   end
 end
@@ -127,7 +127,7 @@ get '/follow/:to_user_id' do
 
   db.xquery('insert into follows values(null, ?, ?)', session[:login_user_id], params[:to_user_id])
 
-  cookies[:msg] = '成功： フォローに成功しました'
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー登録<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -141,7 +141,7 @@ get '/unfollow/:to_user_id' do
 
   db.xquery('delete from follows where from_user_id = ? && to_user_id = ?;', session[:login_user_id], params[:to_user_id])
 
-  cookies[:msg] = '成功： フォロー解除に成功しました'
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー解除<br>「解除を正常に処理しました」</p>"
 
   redirect '/'
 end
@@ -169,7 +169,7 @@ get '/like/:to_post_id' do
 
   db.xquery('insert into likes values(null, ?, ?)', session[:login_user_id], params[:to_post_id])
 
-  cookies[:msg] = '成功： いいねに成功しました'
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね登録<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -183,7 +183,7 @@ get '/unlike/:to_post_id' do
 
   db.xquery('delete from likes where from_user_id = ? && to_post_id = ?;', session[:login_user_id], params[:to_post_id])
 
-  cookies[:msg] = '成功： いいね解除に成功しました'
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね解除<br>「解除の処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -216,5 +216,7 @@ post '/edit_profile' do
   end
 
   db.xquery('update users set profile = ?, icon_img_path = ? where id = ?;', new_profile, new_icon_img_filename, session[:login_user_id])
+
+  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>プロフィール変更<br>「変更処理を正常に終了しました」</p>"
   redirect '/edit_profile'
 end

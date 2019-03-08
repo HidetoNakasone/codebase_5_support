@@ -1,6 +1,150 @@
 
-#about_me {
-  background-color: rgb(205, 195, 11);
+* {
+  text-align: center;
+  transition: .3s;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+
+p {
+  word-wrap: break-word;
+}
+
+a {
+  color: white;
+}
+
+body {
+  animation: fadeIn 1.5s ease 0s 1 normal;
+
+  color: rgb(69, 69, 69);
+  width: 100%;
+  margin: 0;
+  background: linear-gradient(to right, #13adee, #0072ff);
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    margin-top: 100px;
+  }
+  100% {
+    opacity: 1;
+    margin-top:  0;
+  }
+}
+
+#title {
+  color:rgb(69, 69, 69);
+  overflow: hidden;
+  opacity: 0;
+  animation: title_anime 1.6s ease .6s 1 forwards;
+  font-size: 50px;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  margin-left: -50px;
+}
+
+@keyframes title_anime {
+  0% {
+  }
+  100% {
+    margin-left: 0px;
+    opacity: 1;
+  }
+}
+
+input {
+  color:rgb(69, 69, 69);
+  width: 24%;
+  max-width: 300px;
+  height: 44px;
+  border: 0;
+  border-radius: 16px;
+  margin: 13px;
+  padding-top: 4px;
+  font-size: 23px;
+  background-color: rgba(255, 255, 255, 0.65);
+}
+
+input[type="submit"] {
+  background: linear-gradient(to right, #ffb75e, #ed8f03);
+  font-weight: bolder;
+  margin-top: 0;
+}
+
+input::placeholder {
+  color: rgb(147, 146, 146);
+}
+
+input:hover::placeholder, input:focus::placeholder {
+  opacity: 0;
+}
+
+input[type="text"]:hover, input[type="text"]:focus,
+input[type="password"]:hover, input[type="password"]:focus {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 30px;
+}
+
+input[type="file"] {
+  font-size: 16px;
+  margin-top: 0;
+  background: none;
+  color: white;
+  height: 28px;
+  border-radius: 0;
+}
+
+input[type="file"]:hover {
+  cursor: pointer;
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus {
+  cursor: pointer;
+  width: 20%;
+  max-width: 220px;
+  border-radius: 24px;
+  color: white;
+  font-size: 28px;
+}
+
+#page_message {
+  background-color: rgba(79, 79, 79, 0.25);
+  color: white;
+  border-radius: 10px;
+  /* position: absolute; */
+  position: fixed;
+  top: 3%;
+  left: 2%;
+  opacity: 0;
+  font-size: 15px;
+
+  animation: anime_page_message .8s ease 1.2s 1 forwards;
+}
+
+@keyframes anime_page_message {
+  0% {
+    margin-left: -200px;
+  }
+  60% {
+    margin-left: 20px;
+    border-radius: 40px;
+    background-color: rgba(255, 237, 74, 0.7);
+    border-radius: 30px 0 30px 0;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 0;
+  }
+}
+
+#top_about_me {
+  width: 50%;
+  margin: 0 auto;
+  background-color: rgb(100, 192, 233);
   border-radius: 20px;
   padding: 2px 15px;
 }
@@ -9,17 +153,55 @@
   width: 100px;
 }
 
-.view {
-  background-color: rgb(100, 192, 233);
+#top_form {
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(73, 209, 130, 1);
+}
+
+.top_view {
+  position: relative;
+  overflow: hidden;
+  width: 50%;
+  margin: 0 auto;
+  background-color: rgba(200, 198, 71, 0.8);
   border-radius: 20px;
   padding: 2px 15px;
 }
 
-.view_img {
-  width: 100px;
+.top_view_img {
+  width: 200px;
+  padding: 10px;
+  border-radius: 20px;
+  float: left;
+}
+
+.top_view_msg {
+
+  font-size: 30px;
+}
+
+.top_view_status {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
 }
 
 #ep_profile_img {
   width: 100px;
   cursor: pointer;
+}
+
+#logo {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-bottom: -6px;
+  width: 170px;
+}
+
+#logo img {
+  width: 100%;
 }
