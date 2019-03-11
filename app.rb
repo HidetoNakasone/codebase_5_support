@@ -17,7 +17,7 @@ def db
 end
 
 def my_info
-  @my_info = db.xquery('select * from users where id = ?', session[:login_user_id]).map{ |i| i }.first
+  @my_info = db.xquery('select * from users where id = ?', session[:login_user_id]).to_a.first
 end
 
 def login_check
@@ -150,6 +150,7 @@ get '/follow_list' do
   login_check
   @title = 'FOLLOE_LIST'
   @res= db.xquery('select f.to_user_id, u.name from follows f left outer join users u on f.to_user_id = u.id where from_user_id = ? order by f.to_user_id asc;', session[:login_user_id])
+  @my_info = my_info
   erb :follow_list
 end
 
@@ -157,6 +158,7 @@ get '/follower_list' do
   login_check
   @title = 'FOLLOEER_LIST'
   @res= db.xquery('select f.from_user_id, u.name from follows f left outer join users u on f.from_user_id = u.id where to_user_id = ? order by f.from_user_id asc;', session[:login_user_id])
+  @my_info = my_info
   erb :follower_list
 end
 
@@ -192,12 +194,14 @@ get '/like_list' do
   login_check
   @title = 'LIKE_LIST'
   @res= db.xquery('select to_post_id from likes where from_user_id = ? order by to_post_id asc;', session[:login_user_id])
+  @my_info = my_info
   erb :like_list
 end
 
 get '/edit_profile' do
   login_check
   @title = 'PROFILE_EDIT'
+  @my_info = my_info
   erb :edit_profile
 end
 

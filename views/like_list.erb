@@ -3,7 +3,7 @@
 
 <div id="like_list_view">
   <% if @res.size < 1 %>
-    <p><%= my_info['name'] %>さんがいいねしている記事はありません</p>
+    <p><%= @my_info['name'] %>さんがいいねしている記事はありません</p>
   <% end %>
 
   <% @res.each do |item| %>
