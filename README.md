@@ -14,4 +14,4 @@ create table follows (id int(10) auto_increment, from_user_id int(10), to_user_i
 
 create table likes (id int(10) auto_increment, from_user_id int(10), to_post_id int(10), primary key(id));
 
-create view view_sub as select p.id, p.creater_id, u.name, p.img_path, p.msg, p.created_at, p.updated_at from posts p left outer join users u on p.creater_id = u.id;
+create view view_sub as select p.id, p.creater_id, u.name, p.img_path, p.msg, p.created_at, p.updated_at, (select count(id) from likes l where l.to_post_id = p.id) like_count from posts p left outer join users u on p.creater_id = u.id;
