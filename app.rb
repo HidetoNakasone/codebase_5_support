@@ -28,7 +28,7 @@ get '/' do
   login_check
   @title = 'TOP'
 
-  @res = db.xquery('select distinct vs.id, vs.creater_id, vs.name, vs.img_path, vs.msg, vs.created_at, vs.updated_at, f.from_user_id follow_from_user_id, l.from_user_id like_from_user_id from view_sub vs left outer join follows f on vs.creater_id = (select to_user_id from follows where to_user_id = vs.creater_id && from_user_id = ?) left outer join likes l on vs.id = (select to_post_id from likes where to_post_id = vs.id && from_user_id = ?) where (f.from_user_id is null || f.from_user_id = ?) && (l.from_user_id is null || l.from_user_id = ?) order by vs.id asc;', session[:login_user_id], session[:login_user_id], session[:login_user_id], session[:login_user_id])
+  @res = db.xquery('select distinct vs.id, vs.creater_id, vs.name, vs.img_path, vs.msg, vs.created_at, vs.updated_at, vs.like_count, f.from_user_id follow_from_user_id, l.from_user_id like_from_user_id from view_sub vs left outer join follows f on vs.creater_id = (select to_user_id from follows where to_user_id = vs.creater_id && from_user_id = ?) left outer join likes l on vs.id = (select to_post_id from likes where to_post_id = vs.id && from_user_id = ?) where (f.from_user_id is null || f.from_user_id = ?) && (l.from_user_id is null || l.from_user_id = ?) order by vs.id asc;', session[:login_user_id], session[:login_user_id], session[:login_user_id], session[:login_user_id])
 
   erb :top, layout: :layout
 end
