@@ -3,7 +3,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'mysql2'
 require 'mysql2-cs-bind'
-require 'sinatra/cookies'
+# require 'sinatra/cookies'
 
 enable :sessions
 
@@ -30,6 +30,7 @@ get '/' do
 
   @res = db.xquery('select distinct vs.id, vs.creater_id, vs.name, vs.img_path, vs.msg, vs.created_at, vs.updated_at, vs.like_count, f.from_user_id follow_from_user_id, l.from_user_id like_from_user_id from view_sub vs left outer join follows f on vs.creater_id = (select to_user_id from follows where to_user_id = vs.creater_id && from_user_id = ?) left outer join likes l on vs.id = (select to_post_id from likes where to_post_id = vs.id && from_user_id = ?) where (f.from_user_id is null || f.from_user_id = ?) && (l.from_user_id is null || l.from_user_id = ?) order by vs.id asc;', session[:login_user_id], session[:login_user_id], session[:login_user_id], session[:login_user_id])
 
+  @page_msg = session[:page_msg]
   erb :top, layout: :layout
 end
 
@@ -45,31 +46,32 @@ post '/save' do
 
   db.xquery('insert into posts(creater_id, img_path, msg) values(?, ?, ?);', session[:login_user_id], temp_filename, up_msg)
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>投稿保存<br>「処理が正常に終了しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>投稿保存<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
 
 get '/login' do
   @title = 'LOGIN'
+  @l_name = session[:l_name]
   erb :login, layout: :layout
 end
 
 post '/login' do
   res = db.xquery('select * from users where name = ? && pass = ?', params[:l_name], params[:l_pass]).first
   if res
-    cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
+    session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
     session[:login_user_id] = res['id']
-    cookies[:l_name] = nil
+    session[:l_name] = nil
   else
 
     session[:login_user_id] = nil
-    cookies[:l_name] = params['l_name']
+    session[:l_name] = params['l_name']
 
     unless db.xquery('select id from users where name = ?', params[:l_name]).first
-      cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのNameは存在しません」</p>"
+      session[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのNameは存在しません」</p>"
     else
-      cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが間違っています」</p>"
+      session[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが間違っています」</p>"
     end
 
   end
@@ -78,15 +80,16 @@ end
 
 get '/signup' do
   @title = 'SIGNUP'
+  @s_name = session[:s_name]
   erb :signup
 end
 
 post '/signup' do
 
-  cookies[:s_name] = params['s_name']
+  session[:s_name] = params['s_name']
 
   unless params[:s_pass] == params[:s_pass_re]
-    cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが一致しません」</p>"
+    session[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「パスワードが一致しません」</p>"
     redirect '/signup'
   end
 
@@ -102,13 +105,13 @@ post '/signup' do
 
     res2 = db.xquery('select * from users where name = ? && pass = ?', params[:s_name], params[:s_pass]).first
 
-    cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
+    session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>ログイン<br>「正常にログインしました」</p>"
     session[:login_user_id] = res2['id']
-    cookies[:s_name] = nil
+    session[:s_name] = nil
 
     redirect '/'
   else
-    cookies[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのユーザー名は存在しています」</p>"
+    session[:page_msg] = "<p style='padding: 0 10px; color: rgba(255, 253, 85, 1);'>Error.<br>入力不備<br>「そのユーザー名は存在しています」</p>"
     redirect '/signup'
   end
 end
@@ -127,7 +130,7 @@ get '/follow/:to_user_id' do
 
   db.xquery('insert into follows values(null, ?, ?)', session[:login_user_id], params[:to_user_id])
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー登録<br>「処理が正常に終了しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー登録<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -141,7 +144,7 @@ get '/unfollow/:to_user_id' do
 
   db.xquery('delete from follows where from_user_id = ? && to_user_id = ?;', session[:login_user_id], params[:to_user_id])
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー解除<br>「解除を正常に処理しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>フォロー解除<br>「解除を正常に処理しました」</p>"
 
   redirect '/'
 end
@@ -171,7 +174,7 @@ get '/like/:to_post_id' do
 
   db.xquery('insert into likes values(null, ?, ?)', session[:login_user_id], params[:to_post_id])
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね登録<br>「処理が正常に終了しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね登録<br>「処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -185,7 +188,7 @@ get '/unlike/:to_post_id' do
 
   db.xquery('delete from likes where from_user_id = ? && to_post_id = ?;', session[:login_user_id], params[:to_post_id])
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね解除<br>「解除の処理が正常に終了しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>いいね解除<br>「解除の処理が正常に終了しました」</p>"
 
   redirect '/'
 end
@@ -221,6 +224,6 @@ post '/edit_profile' do
 
   db.xquery('update users set profile = ?, icon_img_path = ? where id = ?;', new_profile, new_icon_img_filename, session[:login_user_id])
 
-  cookies[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>プロフィール変更<br>「変更処理を正常に終了しました」</p>"
+  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>プロフィール変更<br>「変更処理を正常に終了しました」</p>"
   redirect '/edit_profile'
 end

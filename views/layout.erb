@@ -9,9 +9,9 @@
   <body>
 
     <div id="page_message">
-      <%= cookies[:page_msg] if cookies[:page_msg] %>
+      <%= @page_msg if @page_msg %>
     </div>
-    <% cookies[:page_msg] = nil %>
+    <% @page_msg = nil %>
 
     <%= yield %>
 
