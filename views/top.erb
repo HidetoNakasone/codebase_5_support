@@ -4,9 +4,9 @@
 
 
 <div id="top_about_me">
-  <p>自分に関する情報： id(<%= my_info['id'] %>), name(<%= my_info['name']%>), プロフィール文(<%= my_info['profile'] %>)</p>
+  <p>自分に関する情報： id(<%= @my_info['id'] %>), name(<%= @my_info['name']%>), プロフィール文(<%= @my_info['profile'] %>)</p>
 
-  <img id="top_profile_img" src="/user_icon_images/<%= my_info['icon_img_path'] %>" alt="<%= my_info['name'] %>さんのプロフィール画像">
+  <img id="top_profile_img" src="/user_icon_images/<%= @my_info['icon_img_path'] ||= 'default_user_icon.jpg' %>" alt="<%= @my_info['name'] %>さんのプロフィール画像">
 </div>
 
 <br>

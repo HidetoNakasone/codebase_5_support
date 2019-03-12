@@ -31,6 +31,8 @@ get '/' do
   @res = db.xquery('select distinct vs.id, vs.creater_id, vs.name, vs.img_path, vs.msg, vs.created_at, vs.updated_at, vs.like_count, f.from_user_id follow_from_user_id, l.from_user_id like_from_user_id from view_sub vs left outer join follows f on vs.creater_id = (select to_user_id from follows where to_user_id = vs.creater_id && from_user_id = ?) left outer join likes l on vs.id = (select to_post_id from likes where to_post_id = vs.id && from_user_id = ?) where (f.from_user_id is null || f.from_user_id = ?) && (l.from_user_id is null || l.from_user_id = ?) order by vs.id asc;', session[:login_user_id], session[:login_user_id], session[:login_user_id], session[:login_user_id])
 
   @page_msg = session[:page_msg]
+  @my_info = my_info
+  session[:page_msg] = nil
   erb :top, layout: :layout
 end
 
@@ -54,6 +56,8 @@ end
 get '/login' do
   @title = 'LOGIN'
   @l_name = session[:l_name]
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :login, layout: :layout
 end
 
@@ -81,6 +85,8 @@ end
 get '/signup' do
   @title = 'SIGNUP'
   @s_name = session[:s_name]
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :signup
 end
 
@@ -98,10 +104,8 @@ post '/signup' do
   s_profile = params[:s_profile]
   s_profile ||= ''
 
-  p s_profile
-
   unless res
-    db.xquery('insert into users values(null, ?, ?, ?, ?)', params[:s_name], params[:s_pass], s_profile, 'default_user_icon.jpg')
+    db.xquery('insert into users values(null, ?, ?, ?, null)', params[:s_name], params[:s_pass], s_profile)
 
     res2 = db.xquery('select * from users where name = ? && pass = ?', params[:s_name], params[:s_pass]).first
 
@@ -154,6 +158,8 @@ get '/follow_list' do
   @title = 'FOLLOE_LIST'
   @res= db.xquery('select f.to_user_id, u.name from follows f left outer join users u on f.to_user_id = u.id where from_user_id = ? order by f.to_user_id asc;', session[:login_user_id])
   @my_info = my_info
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :follow_list
 end
 
@@ -162,6 +168,8 @@ get '/follower_list' do
   @title = 'FOLLOEER_LIST'
   @res= db.xquery('select f.from_user_id, u.name from follows f left outer join users u on f.from_user_id = u.id where to_user_id = ? order by f.from_user_id asc;', session[:login_user_id])
   @my_info = my_info
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :follower_list
 end
 
@@ -198,6 +206,8 @@ get '/like_list' do
   @title = 'LIKE_LIST'
   @res= db.xquery('select to_post_id from likes where from_user_id = ? order by to_post_id asc;', session[:login_user_id])
   @my_info = my_info
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :like_list
 end
 
@@ -205,25 +215,30 @@ get '/edit_profile' do
   login_check
   @title = 'PROFILE_EDIT'
   @my_info = my_info
+  @page_msg = session[:page_msg]
+  session[:page_msg] = nil
   erb :edit_profile
 end
 
 post '/edit_profile' do
+
   new_profile = params[:new_profile]
   new_profile ||= ''
 
-  new_icon_img_filename = ''
+
+  new_icon_img_filename = my_info['icon_img_path']
+
   if params[:new_icon_img]
     new_icon_img_filename = ((0..9).to_a + ("a".."z").to_a + ("A".."Z").to_a).sample(30).join
     new_icon_img_filename += ('.' + params[:new_icon_img][:type].split('/').last)
-
     FileUtils.mv(params[:new_icon_img][:tempfile], "./public/user_icon_images/#{new_icon_img_filename}")
-  else
-    new_icon_img_filename = 'default_user_icon.jpg'
   end
 
-  db.xquery('update users set profile = ?, icon_img_path = ? where id = ?;', new_profile, new_icon_img_filename, session[:login_user_id])
+  if params[:new_icon_img_filename] || params[:new_profile] != ''
+    db.xquery('update users set profile = ?, icon_img_path = ? where id = ?;', new_profile, new_icon_img_filename, session[:login_user_id])
 
-  session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>プロフィール変更<br>「変更処理を正常に終了しました」</p>"
+    session[:page_msg] = "<p style='padding: 0 10px;'>Success.<br>プロフィール変更<br>「変更処理を正常に終了しました」</p>"
+  end
+
   redirect '/edit_profile'
 end
